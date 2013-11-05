@@ -1,0 +1,18 @@
+# project  configured on Fri Oct 11 01:11:44 2013 by
+# waf 1.7.0 (abi 98, python 20705f0 on darwin)
+# using ./waf configure
+#
+----------------------------------------
+Setting top to
+/Users/jamanato/pebble-dev/PebbleSDK-1.12/Pebble/hello_world
+----------------------------------------
+Setting out to
+/Users/jamanato/pebble-dev/PebbleSDK-1.12/Pebble/hello_world/build
+----------------------------------------
+Checking for program gcc,cc
+arm-none-eabi-gcc
+find program=['gcc', 'cc'] paths='' var='CC' -> 'arm-none-eabi-gcc'
+----------------------------------------
+Checking for program ar
+arm-none-eabi-ar
+find program=['ar'] paths='' var='AR' -> 'arm-none-eabi-ar'
