@@ -1,0 +1,3 @@
+source 'https://rubygems.org'
+gem 'serialport'
+gem 'pebblewatch', :git => 'https://github.com/DouweM/pebblewatch.git'
