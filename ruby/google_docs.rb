@@ -7,11 +7,13 @@ presentation = "https://docs.google.com/a/pearson.com/presentation/d/1_2FjgNNCDQ
 
 class GoogleDocs
   def initialize() 
-    default_profile = Selenium::WebDriver::Firefox::Profile.from_name "default"
-    default_profile.native_events = true
+    # default_profile = Selenium::WebDriver::Firefox::Profile.from_name "default"
+    # default_profile.native_events = true
 
-    @browser = Selenium::WebDriver.for :firefox, :profile => default_profile
+    @browser = Selenium::WebDriver.for :firefox #, :profile => default_profile
     @wait = Selenium::WebDriver::Wait.new(:timeout => 15)
+    @handle = @browser.window_handle
+    puts "handle => #{@handle}"
   end
 
   def connect(url)
@@ -46,27 +48,29 @@ class GoogleDocs
   end
 
   def slideshow()
+    @wait.until {
+      @browser.title.downcase.start_with? "pphnov13"
+    }
+  
     @browser.action.key_down(:control).send_keys(:f5).perform
-    @browser.switch_to.default_content
-    @browser.execute_script('window.focus();')
+    @browser.window_handles.each { |h|
+      puts "I have handle => #{h}"
+      if h != @handle 
+        puts "switching to #{h}"
+        @browser.switch_to.window(h)
+        break
+      end
+    }
+
   end
 
   def next()
-    next_but = @wait.until {
-        element = @browser.find_element(:xpath,"/*[@role='button' and contains(@title,'Next')]")
-        element if element.displayed?
-      }
-      puts next_but
-      next_but.click()
+    @browser.action.send_keys(:arrow_right).perform
     puts "next"
   end
 
   def prev()
-    current_url = @browser.current_url
-    @browser.action.send_keys(:page_down).perform
-    @wait.until {
-      @browser.current_url != current_url
-    }
+    @browser.action.send_keys(:arrow_left).perform
     puts "prev"
   end
 
@@ -79,16 +83,16 @@ end
 # start presentation
 g = GoogleDocs.new
 g.connect('https://docs.google.com/a/pearson.com/presentation/d/1_2FjgNNCDQsrPOJBxDl6Ht1UvsR1d3MoBbdmtx8gpjs/edit#slide=id.p')
-g.login('my_userid','my_password')
+g.login('userid','password')
 g.slideshow
 
 g.next()
-# g.next()
-# g.prev()
-# g.prev()
-# g.next()
-# g.next()
-# g.next()
+g.next()
+g.prev()
+g.prev()
+g.next()
+g.next()
+g.next()
 
 # g.close
 
