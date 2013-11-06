@@ -49,18 +49,22 @@ class GoogleDocs
 
 # speakernotes-workspace <svg>
   def get_slides() 
+    slides = []
     @browser.action.send_keys(:home).perform
-    puts "Getting slides"
     while true do
       notes = @wait.until {
         element = @browser.find_element(:css,"#speakernotes-workspace svg")
         element if element.displayed?
       }
-      puts "Notes => #{notes.text}"
+      id = @browser.current_url.split('#')[1]
+      base = @browser.current_url.split('/edit')[0]
+      slides << { :url => "#{base}/present##{id}", :notes => notes.text }
       url = @browser.current_url
       @browser.action.send_keys(:page_down).perform
       break if @browser.current_url == url
     end
+    slides.each { |s| puts "#{s[:url]} => #{s[:notes]}"}
+    slides
   end
 
   def slideshow()
@@ -78,6 +82,12 @@ class GoogleDocs
       end
     }
 
+  end
+
+  def show_slide(s)
+    @wait.until {
+     @browser.get(s[:url])
+  }
   end
 
   def next()
@@ -101,22 +111,21 @@ g = GoogleDocs.new
 g.connect('https://docs.google.com/a/pearson.com/presentation/d/1_2FjgNNCDQsrPOJBxDl6Ht1UvsR1d3MoBbdmtx8gpjs/edit#slide=id.p')
 
 # Login (to Pearson)
-g.login('*****','*****')
+g.login('****','***')
 
 # start the slideshow
-g.get_slides
-g.slideshow
+slides = g.get_slides()
+
+g.slideshow()
 
 # Move forward and backwards through the presentation 
-g.next()
-g.next()
-g.prev()
-g.prev()
-g.next()
-g.next()
-g.next()
 
-# We're all done, close
-# g.close
+slides.each do |s|
+
+  g.show_slide(s)
+  sleep(5)
+end
+
+g.close
 
 puts "All done"
