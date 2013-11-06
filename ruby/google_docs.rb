@@ -83,9 +83,14 @@ end
 # start presentation
 g = GoogleDocs.new
 g.connect('https://docs.google.com/a/pearson.com/presentation/d/1_2FjgNNCDQsrPOJBxDl6Ht1UvsR1d3MoBbdmtx8gpjs/edit#slide=id.p')
+
+# Login (to Pearson)
 g.login('userid','password')
+
+# start the slideshow
 g.slideshow
 
+# Move forward and backwards through the presentation 
 g.next()
 g.next()
 g.prev()
@@ -94,6 +99,7 @@ g.next()
 g.next()
 g.next()
 
+# We're all done, close
 # g.close
 
 puts "All done"
