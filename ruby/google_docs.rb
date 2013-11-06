@@ -47,6 +47,22 @@ class GoogleDocs
     end
   end
 
+# speakernotes-workspace <svg>
+  def get_slides() 
+    @browser.action.send_keys(:home).perform
+    puts "Getting slides"
+    while true do
+      notes = @wait.until {
+        element = @browser.find_element(:css,"#speakernotes-workspace svg")
+        element if element.displayed?
+      }
+      puts "Notes => #{notes.text}"
+      url = @browser.current_url
+      @browser.action.send_keys(:page_down).perform
+      break if @browser.current_url == url
+    end
+  end
+
   def slideshow()
     @wait.until {
       @browser.title.downcase.start_with? "pphnov13"
@@ -85,9 +101,10 @@ g = GoogleDocs.new
 g.connect('https://docs.google.com/a/pearson.com/presentation/d/1_2FjgNNCDQsrPOJBxDl6Ht1UvsR1d3MoBbdmtx8gpjs/edit#slide=id.p')
 
 # Login (to Pearson)
-g.login('userid','password')
+g.login('*****','*****')
 
 # start the slideshow
+g.get_slides
 g.slideshow
 
 # Move forward and backwards through the presentation 
